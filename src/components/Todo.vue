@@ -3,13 +3,9 @@
 
     <div class='content' v-show="!isEditing">
 
-        <div class='header'>
-            {{ todo.title }}
-        </div>
+        <div class='header'>{{ todo.title }}</div>
 
-        <div class='meta'>
-            {{ todo.project }}
-        </div>
+        <div class='meta'>{{ todo.project }}</div>
 
         <div class='extra content'>
             <span class='right floated edit icon' v-on:click="showForm">
@@ -35,18 +31,14 @@
         </div>
 
         <div class='ui two button attached buttons'>
-          <button class='ui basic blue button' v-on:click="hideForm">
-            Close X
-          </button>
+          <button class='ui basic blue button' v-on:click="hideForm">Close X</button>
         </div>
       </div>
     </div>
 
-    <div class='ui bottom attached green basic button' v-show="!isEditing &&todo.done" disabled>
-        Completed
-    </div>
+    <div class='ui bottom attached green basic button' v-show="!isEditing &&todo.done" disabled>Completed</div>
 
-    <div class='ui bottom attached red basic button' v-show="!isEditing && !todo.done">
+    <div class='ui bottom attached red basic button' v-on:click="completeTodo(todo)" v-show="!isEditing && !todo.done">
         Pending
     </div>
 
@@ -54,24 +46,26 @@
 </template>
 
 <script type="text/javascript">
-
-export default {
-  props: ['todo'],
-  data () {
-    return {
-      isEditing: false
-    }
-  },
-  methods: {
-    deleteTodo (todo) {
-      this.$emit('delete-todo', todo)
+  export default {
+    props: ['todo'],
+    data () {
+      return {
+        isEditing: false,
+      };
     },
-    showForm () {
-      this.isEditing = true
+    methods: {
+      completeTodo (todo) {
+        this.$emit('complete-todo', todo);
+      },
+      deleteTodo (todo) {
+        this.$emit('delete-todo', todo);
+      },
+      showForm () {
+        this.isEditing = true;
+      },
+      hideForm () {
+        this.isEditing = false;
+      },
     },
-    hideForm () {
-      this.isEditing = false
-    }
-  }
-}
+  };
 </script>

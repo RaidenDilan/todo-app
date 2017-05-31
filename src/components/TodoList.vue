@@ -1,29 +1,48 @@
 <template>
   <div>
-    <p>Completed Tasks: {{ todos.filter(todo => { return todo.done === true }).length }}</p>
-    <p>Pending Tasks: {{ todos.filter(todo => { return todo.done === false }).length }}</p>
-
-    <todo v-on:delete-todo="deleteTodo" v-for="todo in todos" :key="todo.id" v-bind:todo="todo"></todo>
+    <p class="tasks">Completed Tasks: {{ todos.filter(todo => { return todo.done === true }).length }}</p>
+    <p class="tasks">Pending Tasks: {{ todos.filter(todo => { return todo.done === false }).length }}</p>
+    <todo v-on:delete-todo="deleteTodo" v-for="todo in todos" v-on:complete-todo="completeTodo" v-bind:todo="todo" :key="todo.title" :todo.sync="todo"></todo>
   </div>
 </template>
 
 <script type = "text/javascript">
 
-import Todo from './Todo'
+import sweetalert from 'sweetalert';
+import Todo from './Todo';
 
 export default {
   props: ['todos'],
   components: {
-    Todo
+    Todo,
   },
   methods: {
     deleteTodo (todo) {
-      const todoIndex = this.todos.indexOf(todo)
-      this.todos.splice(todoIndex, 1)
-    }
-  }
-}
+      sweetalert({
+        title: 'Are you sure?',
+        text: 'This To-Do will be permanently deleted!',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Yes, delete it!',
+        closeOnConfirm: false,
+      },
+      () => {
+      const todoIndex = this.todos.indexOf(todo);
+      this.todos.splice(todoIndex, 1);
+      });
+    },
+    completeTodo (todo) {
+      const todoIndex = this.todos.indexOf(todo);
+      this.todos[todoIndex].done = true;
+      sweetalert('Success!', 'To-Do completed!', 'success');
+    },
+  },
+};
 </script>
 
-<style>
+<style scoped>
+  p.tasks {
+    text-align: center;
+  }
 </style>
